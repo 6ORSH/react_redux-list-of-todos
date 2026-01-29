@@ -19,6 +19,10 @@ export const TodoModal = () => {
       return;
     }
 
+    setLoading(true);
+    setUser(null);
+    setFetchError(null);
+
     getUser(todo.userId)
       .then((fetchedUser: User) => setUser(fetchedUser))
       .catch(error => setFetchError(error.message))
