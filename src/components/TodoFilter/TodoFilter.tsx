@@ -1,28 +1,18 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { filterSlice } from '../../features/filter';
+import { store, useAppSelector } from '../../app/store';
+import { actions as filterActions } from '../../features/filter';
 import { Status } from '../../types/Status';
 
-type Props = {
-  query: string;
-};
+export const TodoFilter: React.FC = () => {
+  const query = useAppSelector(state => state.filters.query);
 
-export const TodoFilter: React.FC<Props> = ({ query = '' }) => {
-  const dispatch = useDispatch();
+  const handleStatusChange = useCallback((newStatus: Status) => {
+    store.dispatch(filterActions.updateStatus(newStatus));
+  }, []);
 
-  const handleStatusChange = useCallback(
-    (newStatus: Status) => {
-      dispatch(filterSlice.actions.updateStatus(newStatus));
-    },
-    [dispatch],
-  );
-
-  const handleQueryChange = useCallback(
-    (newQuery: string) => {
-      dispatch(filterSlice.actions.updateQuery(newQuery.toLowerCase()));
-    },
-    [dispatch],
-  );
+  const handleQueryChange = useCallback((newQuery: string) => {
+    store.dispatch(filterActions.updateQuery(newQuery.toLowerCase()));
+  }, []);
 
   return (
     <form className="field has-addons" onSubmit={e => e.preventDefault()}>

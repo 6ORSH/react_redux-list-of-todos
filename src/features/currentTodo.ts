@@ -3,7 +3,7 @@ import { Todo } from '../types/Todo';
 
 const initialState = null as Todo | null;
 
-export const currentTodoSlice = createSlice({
+export const { reducer, actions } = createSlice({
   name: 'currentTodo',
   initialState,
   reducers: {

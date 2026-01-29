@@ -1,8 +1,7 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { getUser } from '../../api';
-import { useAppSelector } from '../../app/store';
-import { currentTodoSlice } from '../../features/currentTodo';
+import { store, useAppSelector } from '../../app/store';
+import { actions as currentTodoActions } from '../../features/currentTodo';
 import { Todo } from '../../types/Todo';
 import { User } from '../../types/User';
 import { Loader } from '../Loader';
@@ -11,7 +10,6 @@ export const TodoModal = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const dispatch = useDispatch();
   const todo: Todo | null = useAppSelector(state => state.currentTodo);
 
   const fetchUser = useCallback(() => {
@@ -34,8 +32,8 @@ export const TodoModal = () => {
   }, [fetchUser]);
 
   const handleClose = useCallback(() => {
-    dispatch(currentTodoSlice.actions.setCurrentTodo(null));
-  }, [dispatch]);
+    store.dispatch(currentTodoActions.setCurrentTodo(null));
+  }, []);
 
   const handleRetry = () => {
     setLoading(true);

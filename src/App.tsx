@@ -2,29 +2,26 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'bulma/css/bulma.css';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { getTodos } from './api';
-import { useAppSelector } from './app/store';
+import { store } from './app/store';
 import { Loader } from './components/Loader';
 import { TodoFilter } from './components/TodoFilter';
 import { TodoList } from './components/TodoList';
 import { TodoModal } from './components/TodoModal';
-import { todosSlice } from './features/todos';
+import { actions as todosActions } from './features/todos';
 
 export const App = () => {
   const [loading, setLoading] = useState(true);
-  const query = useAppSelector(state => state.filter.query);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const dispatch = useDispatch();
 
   const fetchTodos = useCallback(() => {
     getTodos()
       .then(fetchedTodos => {
-        dispatch(todosSlice.actions.setTodos(fetchedTodos));
+        store.dispatch(todosActions.setTodos(fetchedTodos));
       })
       .catch(error => setFetchError(error.message))
       .finally(() => setLoading(false));
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     fetchTodos();
@@ -44,7 +41,7 @@ export const App = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter query={query} />
+              <TodoFilter />
             </div>
 
             <div className="block">

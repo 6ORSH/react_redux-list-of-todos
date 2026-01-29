@@ -1,17 +1,15 @@
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../app/store';
-import { currentTodoSlice } from '../../features/currentTodo';
+import { store, useAppSelector } from '../../app/store';
+import { actions as filterActions } from '../../features/currentTodo';
 import { Todo } from '../../types/Todo';
 
 export const TodoList = () => {
-  const dispatch = useDispatch();
   const currentTodo: Todo | null = useAppSelector(state => state.currentTodo);
   const todosFromServer = useAppSelector(state => state.todos);
   const [displayedTodos, setDisplayedTodos] = useState<Todo[]>(todosFromServer);
-  const query = useAppSelector(state => state.filter.query);
-  const status = useAppSelector(state => state.filter.status);
+  const query = useAppSelector(state => state.filters.query);
+  const status = useAppSelector(state => state.filters.status);
 
   useEffect(() => {
     setDisplayedTodos(() => {
@@ -33,12 +31,9 @@ export const TodoList = () => {
     });
   }, [status, query, todosFromServer]);
 
-  const handleSelect = useCallback(
-    (todo: Todo | null) => {
-      dispatch(currentTodoSlice.actions.setCurrentTodo(todo));
-    },
-    [dispatch],
-  );
+  const handleSelect = useCallback((todo: Todo | null) => {
+    store.dispatch(filterActions.setCurrentTodo(todo));
+  }, []);
 
   return (
     <table className="table is-narrow is-fullwidth">
